@@ -16,13 +16,6 @@ namespace WLdemo.Controllers
             return View();
         }
 
-        // temporary test
-        [HttpGet("test-hello")]
-        public IActionResult Hello()
-        {
-            return Content("Running");
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
