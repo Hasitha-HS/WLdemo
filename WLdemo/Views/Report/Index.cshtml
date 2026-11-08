@@ -1,0 +1,62 @@
+@model IEnumerable<WLdemo.Models.ViewModels.CategoryAvgPriceViewModel>
+
+@{
+    ViewData["Title"] = "Reports Dashboard";
+    var highestStock = ViewBag.HighestStockCategory as WLdemo.Models.ViewModels.HighestStockValueCategoryViewModel;
+}
+
+<div class="container mt-4">
+    <h2>Reporting Dashboard</h2>
+    <hr />
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-white bg-success shadow-sm">
+                <div class="card-header">Highest Stock Value Category (CachedLong)</div>
+                <div class="card-body">
+                    @if (highestStock != null)
+                    {
+                        <h4 class="card-title">@highestStock.Category</h4>
+                        <p class="card-text">Total Valuation: <strong>$@highestStock.TotalStockValue.ToString("0.00")</strong></p>
+                    }
+                    else
+                    {
+                        <p class="card-text">No inventory data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">Average Price Per Category (5-Min Cached)</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Average Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Category</td>
+                                <td>$@item.AveragePrice.ToString("0.00")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2" class="text-center">No categories found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
