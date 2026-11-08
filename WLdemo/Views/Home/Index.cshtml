@@ -3,6 +3,53 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">H H Senevirathne</h1>
+    <p class="lead">Waterlily Labs Junior Developer Position</p>
+    <p>ASP.NET Core MVC product management demo.</p>
+</div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-center gap-2 mb-4">
+        <a class="btn btn-primary" asp-controller="Product" asp-action="Index">Open Product List</a>
+        <a class="btn btn-success" asp-controller="Report" asp-action="Index">Open Reports</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            Demo Functionality
+        </div>
+        <div class="card-body">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>How it is handled</th>
+                        <th>Test page</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Product CRUD operations</td>
+                        <td>Create, read, update, and delete products through the Product service, repository, controller, and AJAX UI.</td>
+                        <td><a asp-controller="Product" asp-action="Index">Product List</a></td>
+                    </tr>
+                    <tr>
+                        <td>Average price per category</td>
+                        <td>Calculated by the <code>sp_GetAveragePricePerCategory</code> stored procedure and displayed in the Reports page.</td>
+                        <td><a asp-controller="Report" asp-action="Index">Reports</a></td>
+                    </tr>
+                    <tr>
+                        <td>Highest stock value category</td>
+                        <td>Calculated using product price multiplied by stock through the <code>sp_GetHighestStockValueCategory</code> stored procedure.</td>
+                        <td><a asp-controller="Report" asp-action="Index">Reports</a></td>
+                    </tr>
+                    <tr>
+                        <td>Caching and business logic</td>
+                        <td>ProductService applies five-minute and long-lived cache policies and clears cached results after write operations.</td>
+                        <td><a asp-controller="Product" asp-action="Index">Product List</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
