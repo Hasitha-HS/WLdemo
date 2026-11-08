@@ -5,7 +5,7 @@ ASP.NET Core MVC application for the Waterlily Labs C# web development assessmen
 ## Requirements
 
 - .NET 10 SDK
-- SQL Server LocalDB
+- Microsoft SQL Server (the default connection uses `localhost`)
 - Visual Studio or PowerShell
 - `dotnet-ef` tool
 
@@ -19,14 +19,11 @@ ASP.NET Core MVC application for the Waterlily Labs C# web development assessmen
 - `WLdemo/Controllers/` - MVC controllers
 - `WLdemo/Views/` - Product and Report pages
 - `WLdemo/Migrations/` - EF Core code-first migrations and stored procedure setup
+- `Scripts/SeedDummyData.sql` - optional manual demo data script
 
 ## Setup
 
-Open PowerShell at the solution root, where `WLdemo.slnx` is located:
-
-```powershell
-cd "C:\Users\hasit\Documents\C-Sharp Projects\WLdemo"
-```
+Open PowerShell or another terminal in the solution root, where `WLdemo.slnx` is located.
 
 Install the EF Core command-line tool if it is not already installed:
 
@@ -42,7 +39,25 @@ dotnet restore .\WLdemo.slnx
 
 ## Database Setup
 
-The application uses SQL Server LocalDB with the connection string in `WLdemo/appsettings.json`.
+The application uses Microsoft SQL Server. The default connection in `WLdemo/appsettings.json` is:
+
+```text
+Server=localhost;Database=WaterlilyProductDb;Trusted_Connection=True;TrustServerCertificate=True
+```
+
+If SQL Server uses a named instance, update the `Server` value. For example:
+
+```text
+Server=localhost\SQLEXPRESS;Database=WaterlilyProductDb;Trusted_Connection=True;TrustServerCertificate=True
+```
+
+The connection string can also be supplied through the `ConnectionStrings__DefaultConnection` environment variable. Copy `.env.example` as a reference and set the variable in the terminal session before running EF commands:
+
+```powershell
+$env:ConnectionStrings__DefaultConnection = "Server=localhost;Database=WaterlilyProductDb;Trusted_Connection=True;TrustServerCertificate=True"
+```
+
+ASP.NET Core reads double underscores as configuration sections. Do not commit a real `.env` file.
 
 If this is a new checkout, apply the migrations:
 
@@ -55,14 +70,25 @@ The initial migration creates the `Products` table and the following stored proc
 - `sp_GetAveragePricePerCategory`
 - `sp_GetHighestStockValueCategory`
 
-If the database was created before the stored procedure SQL was added to the migration, recreate the local demo database:
+The database update creates the database, tables, and stored procedures. Testers normally only need to run the update command once on a new checkout. The `database drop` command is only for resetting a local demo database and should not be used if it contains data that needs to be kept.
+
+## Optional Demo Data
+
+The application does not seed data automatically. If sample products are needed for testing the reports, run `Scripts/SeedDummyData.sql` after the database has been created.
+
+Using `sqlcmd` with the default SQL Server instance:
 
 ```powershell
-dotnet ef database drop --force --project .\WLdemo\WLdemo.csproj
-dotnet ef database update --project .\WLdemo\WLdemo.csproj
+sqlcmd -S localhost -E -i .\Scripts\SeedDummyData.sql
 ```
 
-The drop command deletes the local database, so do not use it if the database contains data you need to keep.
+For SQL Express, use:
+
+```powershell
+sqlcmd -S localhost\SQLEXPRESS -E -i .\Scripts\SeedDummyData.sql
+```
+
+The script is safe to run more than once and inserts sample products only when they are not already present.
 
 ## Run the Application
 
@@ -116,7 +142,7 @@ dotnet build .\WLdemo\WLdemo.csproj
 - Product CRUD - `ProductController`, `ProductService`, and `ProductRepository`
 - Repository and service patterns - separate repository and service layers
 - Code-first database - EF Core `ApplicationDbContext` and migrations
-- MSSQL - SQL Server LocalDB provider and connection string
+- MSSQL - SQL Server provider and configurable connection string
 - Stored procedures - category average price and highest stock value calculations
 - Caching - five-minute cache and long-lived cache with invalidation after writes
 - Delegates - `OperationCallback` for CRUD operation feedback
